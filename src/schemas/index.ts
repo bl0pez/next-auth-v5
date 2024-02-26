@@ -9,6 +9,8 @@ export const LoginSchema = z.object({
   }),
 });
 
+export interface LoginValues extends z.infer<typeof LoginSchema> {}
+
 export const RegisterSchema = z.object({
   email: z.string().email({
     message: "Ingresa un correo válido.",
