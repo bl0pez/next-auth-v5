@@ -1,5 +1,8 @@
 "use server";
+import bcrypt from "bcryptjs";
 import { RegisterSchema, RegisterValues } from "@/schemas";
+import { db } from "@/lib/db";
+import { createUser, getUserByEmail } from "@/data/user";
 
 export const register = async (values: RegisterValues) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -10,7 +13,27 @@ export const register = async (values: RegisterValues) => {
     };
   }
 
+  const { email, name, password } = validatedFields.data;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const existingUser = await getUserByEmail(email);
+
+  if (existingUser) {
+    return {
+      error: "El correo electrónico ya está en uso.",
+    };
+  }
+
+  await createUser({
+    email,
+    name,
+    password: hashedPassword,
+  });
+
+  //? TODO: Send email to user
+
   return {
-    susccess: "Correo electrónico enviado con éxito.",
+    susccess: "Usuario registrado con éxito",
   };
 };
