@@ -1,7 +1,6 @@
 "use server";
 import bcrypt from "bcryptjs";
 import { RegisterSchema, RegisterValues } from "@/schemas";
-import { db } from "@/lib/db";
 import { createUser, getUserByEmail } from "@/data/user";
 
 export const register = async (values: RegisterValues) => {
