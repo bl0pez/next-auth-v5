@@ -28,6 +28,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       switch (error.type) {
         case "CredentialsSignin":
           return { error: "Credenciales inválidas." };
+        case "AuthorizedCallbackError":
+          return { error: "Error de autenticación." };
         default:
           return { error: "Algo salió mal." };
       }
