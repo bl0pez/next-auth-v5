@@ -1,5 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Github from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import bcryptjs from "bcryptjs";
 
 import {
@@ -12,10 +14,22 @@ import { getUserById } from "./data/user";
 
 import { LoginSchema } from "./schemas";
 import { getUserByEmail } from "./data/user";
+import { db } from "./lib/db";
 
 export const authConfig = {
   pages: {
     signIn: "/auth/login",
+    error: "/auth/error",
+  },
+  events: {
+    async linkAccount({ user }) {
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          emailVerified: new Date(),
+        },
+      });
+    },
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
@@ -82,6 +96,11 @@ export const authConfig = {
     },
   },
   providers: [
+    Google,
+    Github({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
     Credentials({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);

@@ -30,6 +30,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
           return { error: "Credenciales inválidas." };
         case "AuthorizedCallbackError":
           return { error: "Error de autenticación." };
+        case "OAuthAccountNotLinked":
+          return { error: "Account already exists." };
         default:
           return { error: "Algo salió mal." };
       }
