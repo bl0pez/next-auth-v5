@@ -17,7 +17,7 @@ export const sendVerificationEmail = async ({ email, token }: IEmail) => {
     html: `<p>Click <a href="${confirmLink}">aquí</a> para confirmar tu correo electrónico. </p>`,
   });
 
-  if (error) throw error;
+  if (error) null;
 
   return data;
 };
