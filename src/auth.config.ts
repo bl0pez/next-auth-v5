@@ -63,15 +63,17 @@ export const authConfig = {
 
       return true;
     },
-    // async signIn({ user }) {
-    //   const existingUser = await getUserById(user.id!);
+    async signIn({ user, account }) {
+      //Permitir OAuth sin email verificado
+      if (account?.provider !== "credentials") return true;
 
-    //   if (!existingUser || !existingUser.emailVerified) {
-    //     return false;
-    //   }
+      const existingUser = await getUserById(user.id!);
 
-    //   return true;
-    // },
+      //Prevenir login si el email no está verificado
+      if (!existingUser?.emailVerified) return false;
+
+      return true;
+    },
     async jwt({ token }) {
       if (!token.sub) return token;
 

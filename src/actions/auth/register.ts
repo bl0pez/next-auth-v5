@@ -2,6 +2,8 @@
 import bcrypt from "bcryptjs";
 import { RegisterSchema, RegisterValues } from "@/schemas";
 import { createUser, getUserByEmail } from "@/data/user";
+import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const register = async (values: RegisterValues) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -24,15 +26,23 @@ export const register = async (values: RegisterValues) => {
     };
   }
 
-  await createUser({
-    email,
-    name,
-    password: hashedPassword,
-  });
+  try {
+    await createUser({
+      email,
+      name,
+      password: hashedPassword,
+    });
 
-  //? TODO: Send email to user
+    const verificationToken = await generateVerificationToken(email);
+    await sendVerificationEmail({
+      email: verificationToken.email,
+      token: verificationToken.token,
+    });
 
-  return {
-    susccess: "Usuario registrado con éxito",
-  };
+    return {
+      susccess: "Correo de verificación enviado. Revisa tu bandeja de entrada.",
+    };
+  } catch (error) {
+    return { error: "Algo salió mal." };
+  }
 };
