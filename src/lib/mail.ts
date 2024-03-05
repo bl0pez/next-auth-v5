@@ -7,6 +7,21 @@ interface IEmail {
   token: string;
 }
 
+export const sendPasswordResetEmail = async ({ email, token }: IEmail) => {
+  const resetLink = `${process.env.URL_BASE}/auth/new-password?token=${token}`;
+
+  const { data, error } = await resend.emails.send({
+    from: "Acme <onboarding@resend.dev>",
+    to: email,
+    subject: "Restablecer contraseña",
+    html: `<p>Click <a href="${resetLink}">aquí</a> para restablecer tu contraseña. </p>`,
+  });
+
+  if (error) null;
+
+  return data;
+};
+
 export const sendVerificationEmail = async ({ email, token }: IEmail) => {
   const confirmLink = `${process.env.URL_BASE}/auth/new-verification?token=${token}`;
 

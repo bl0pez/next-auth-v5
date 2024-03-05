@@ -10,7 +10,12 @@ export const publicRoutes = ["/", "/auth/new-verification"];
  * Estas rutas redireccionarán a los usuarios registrados a /settings
  * @type {string[]}
  */
-export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
+export const authRoutes = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/error",
+  "/auth/reset-password",
+];
 
 /**
  * El prefijo para las rutas de autenticación API

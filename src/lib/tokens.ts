@@ -1,6 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
 import { db } from "./db";
 import { getVerificationTokenByEmail } from "@/data/verification-token";
+import {
+  createPasswordResetToken,
+  deletePasswordResetToken,
+  getPasswordResetTokenByEmail,
+} from "@/data/password-reset-token";
 
 export const generateVerificationToken = async (email: string) => {
   // Generamos un token único
@@ -31,4 +36,26 @@ export const generateVerificationToken = async (email: string) => {
   });
 
   return verificationToken;
+};
+
+export const generatePasswordResetToken = async (email: string) => {
+  const token = uuidv4();
+
+  // Generamos una fecha de expiración en 1 hora (3600 segundos) desde ahora.
+  const expires = new Date(new Date().getTime() + 3600 * 1000);
+
+  // Buscamos si ya existe un token para el email
+  const existingToken = await getPasswordResetTokenByEmail(email);
+
+  if (existingToken) {
+    await deletePasswordResetToken(existingToken.id);
+  }
+
+  const passwordResetToken = await createPasswordResetToken({
+    email,
+    expires,
+    token,
+  });
+
+  return passwordResetToken;
 };
