@@ -32,3 +32,12 @@ export const createUser = async (data: RegisterValues) => {
     return null;
   }
 };
+
+export const updateUser = async (id: string, data: Partial<RegisterValues>) => {
+  try {
+    const user = await db.user.update({ where: { id }, data });
+    return user;
+  } catch (error) {
+    return null;
+  }
+};

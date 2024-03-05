@@ -33,3 +33,11 @@ export const ResetPasswordSchema = z.object({
 
 export interface ResetPasswordValues
   extends z.infer<typeof ResetPasswordSchema> {}
+
+export const NewPasswordSchema = z.object({
+  newPassword: validations.password,
+});
+
+export interface NewPasswordValues extends z.infer<typeof NewPasswordSchema> {
+  token: string | null;
+}
