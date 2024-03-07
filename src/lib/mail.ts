@@ -36,3 +36,16 @@ export const sendVerificationEmail = async ({ email, token }: IEmail) => {
 
   return data;
 };
+
+export const sendTwoFactorTokenEmail = async ({ email, token }: IEmail) => {
+  const { data, error } = await resend.emails.send({
+    from: "Acme <onboarding@resend.dev>",
+    to: email,
+    subject: "2FA Código de verificación",
+    html: `<p>Tu código de verificación es: <strong>${token}</strong></p>`,
+  });
+
+  if (error) null;
+
+  return data;
+};

@@ -15,6 +15,10 @@ import { getUserById } from "./data/user";
 import { LoginSchema } from "./schemas";
 import { getUserByEmail } from "./data/user";
 import { db } from "./lib/db";
+import {
+  deleteTwoFactorConfirmation,
+  getTwoFactorConfirmationByUserId,
+} from "./data/two-factor-confirmation";
 
 export const authConfig = {
   pages: {
@@ -71,6 +75,16 @@ export const authConfig = {
 
       //Prevenir login si el email no está verificado
       if (!existingUser?.emailVerified) return false;
+
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          user.id!
+        );
+
+        if (!twoFactorConfirmation) return false;
+
+        await deleteTwoFactorConfirmation(twoFactorConfirmation.id);
+      }
 
       return true;
     },

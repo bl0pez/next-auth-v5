@@ -10,11 +10,13 @@ const validations = {
   name: z.string().min(3, {
     message: "El nombre debe tener al menos 3 caracteres.",
   }),
+  code: z.optional(z.string()),
 };
 
 export const LoginSchema = z.object({
   email: validations.email,
   password: validations.password,
+  code: validations.code,
 });
 
 export interface LoginValues extends z.infer<typeof LoginSchema> {}
