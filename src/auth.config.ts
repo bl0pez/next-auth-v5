@@ -96,6 +96,7 @@ export const authConfig = {
       if (!existingUser) return token;
 
       token.role = existingUser.role;
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
       return token;
     },
@@ -106,6 +107,10 @@ export const authConfig = {
 
       if (token.role && session.user) {
         session.user.role = token.role;
+      }
+
+      if (token.isTwoFactorEnabled && session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
       }
 
       return session;
